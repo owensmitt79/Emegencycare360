@@ -1,0 +1,21 @@
+{
+  "name": "emergencycare360",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev:pb": "cd server/pb && npm run dev",
+    "dev": "concurrently --kill-others --raw \"npm run dev:client\" \"npm run dev:server\"",
+    "build": "npm run build --prefix client",
+    "start": "concurrently --kill-others --raw \"npm run start --prefix server\" \"npm run start --prefix server/pb\"",
+    "lint": "concurrently --raw \"npm run lint --prefix client\" \"npm run lint --prefix server\"",
+    "install-all": "npm install --prefix client && npm install --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "mongodb": "^7.2.0"
+  }
+}
