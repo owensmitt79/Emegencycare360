@@ -3,11 +3,15 @@ import { Helmet } from 'react-helmet';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDoctorAuth } from '@/contexts/DoctorAuthContext.jsx';
 import { toast } from 'sonner';
+import apiClient from '@/lib/apiClient.js';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   LogOut, User, Calendar, Clock, Video, Phone, MessageCircle,
   Star, Activity, AlertCircle, Stethoscope, TrendingUp, Users,
   CheckCircle, XCircle, BarChart2, Bell, Settings, ChevronRight,
-  Heart, Zap, Award, Shield, Plus, FileText, RefreshCw
+  Heart, Zap, Award, Shield, Plus, FileText, RefreshCw,
+  CreditCard, Loader2, Lock
 } from 'lucide-react';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -108,26 +112,187 @@ const typeIcons = {
   Voice: Phone,
 };
 
+// ── Doctor Payment Gate Component ─────────────────────────────────────────────
+const DoctorPaymentGate = ({ doctor, onSuccess, onLogout }) => {
+  const [processing, setProcessing] = useState(false);
+  const [cardData, setCardData] = useState({
+    name: '',
+    number: '',
+    expiry: '',
+    cvv: '',
+  });
+
+  const formatCard = (val) => {
+    const digits = val.replace(/\D/g, '').slice(0, 16);
+    return digits.replace(/(.{4})/g, '$1 ').trim();
+  };
+
+  const formatExpiry = (val) => {
+    const digits = val.replace(/\D/g, '').slice(0, 4);
+    if (digits.length >= 3) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    return digits;
+  };
+
+  const handlePay = async (e) => {
+    e.preventDefault();
+    if (!cardData.name || !cardData.number || !cardData.expiry || !cardData.cvv) {
+      toast.error('Please fill in all card details.');
+      return;
+    }
+
+    setProcessing(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const response = await apiClient.payDoctorRegistrationFee();
+      onSuccess(response.record);
+    } catch (err) {
+      toast.error(err.message || 'Payment failed. Please try again.');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4" 
+      style={{ background: 'linear-gradient(135deg, #0f172a 0%, #0c1a30 100%)' }}>
+      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden text-white">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl" />
+
+        <div className="text-center mb-8 relative z-10">
+          <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
+            <CreditCard className="w-6 h-6 text-blue-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Registration Fee Required</h2>
+          <p className="text-slate-400 text-sm">
+            To activate your doctor profile and begin consulting, please make a one-time network registration payment of ₦5,000.
+          </p>
+        </div>
+
+        <div className="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-6 relative z-10">
+          <div className="flex justify-between items-center text-sm mb-2 text-slate-400">
+            <span>Provider Verification Fee</span>
+            <span className="font-semibold text-white">₦5,000.00</span>
+          </div>
+          <div className="flex justify-between items-center text-xs text-slate-500">
+            <span>Status</span>
+            <span className="text-amber-500 font-semibold">Payment Pending</span>
+          </div>
+        </div>
+
+        <form onSubmit={handlePay} className="space-y-4 relative z-10">
+          <div>
+            <Label htmlFor="cardName" className="text-slate-300 text-xs font-semibold uppercase tracking-wider">Cardholder Name</Label>
+            <Input
+              id="cardName"
+              placeholder="Dr. Jane Doe"
+              value={cardData.name}
+              onChange={(e) => setCardData({ ...cardData, name: e.target.value })}
+              className="mt-1 text-white bg-slate-950 border-slate-800 focus:border-blue-500 focus:ring-blue-500/20"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="cardNumber" className="text-slate-300 text-xs font-semibold uppercase tracking-wider">Card Number</Label>
+            <div className="relative mt-1">
+              <Input
+                id="cardNumber"
+                placeholder="4242 4242 4242 4242"
+                value={cardData.number}
+                onChange={(e) => setCardData({ ...cardData, number: formatCard(e.target.value) })}
+                className="pr-10 text-white bg-slate-950 border-slate-800 focus:border-blue-500 focus:ring-blue-500/20 font-mono"
+                maxLength={19}
+              />
+              <CreditCard className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="expiry" className="text-slate-300 text-xs font-semibold uppercase tracking-wider">Expiry Date</Label>
+              <Input
+                id="expiry"
+                placeholder="MM/YY"
+                value={cardData.expiry}
+                onChange={(e) => setCardData({ ...cardData, expiry: formatExpiry(e.target.value) })}
+                className="mt-1 text-white bg-slate-950 border-slate-800 focus:border-blue-500 focus:ring-blue-500/20 font-mono"
+                maxLength={5}
+              />
+            </div>
+            <div>
+              <Label htmlFor="cvv" className="text-slate-300 text-xs font-semibold uppercase tracking-wider">CVV</Label>
+              <Input
+                id="cvv"
+                placeholder="123"
+                value={cardData.cvv}
+                onChange={(e) => setCardData({ ...cardData, cvv: e.target.value.replace(/\D/g, '').slice(0, 4) })}
+                className="mt-1 text-white bg-slate-950 border-slate-800 focus:border-blue-500 focus:ring-blue-500/20 font-mono"
+                maxLength={4}
+                type="password"
+              />
+            </div>
+          </div>
+
+          <div className="pt-4 flex gap-3">
+            <button
+              type="button"
+              onClick={onLogout}
+              className="flex-1 h-12 bg-slate-800 text-slate-300 font-semibold rounded-xl hover:bg-slate-700 hover:text-white transition-all text-sm"
+              disabled={processing}
+            >
+              Sign Out
+            </button>
+            <button
+              type="submit"
+              className="flex-1 h-12 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 text-sm"
+              disabled={processing}
+            >
+              {processing ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4" />
+                  Pay ₦5,000
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 // ── Main Component ────────────────────────────────────────────────────────────
 
 const DoctorDashboardPage = () => {
   const navigate = useNavigate();
   const { currentDoctor, isAuthenticated, isLoading: authLoading, logout } = useDoctorAuth();
 
+  const [localDoctor, setLocalDoctor] = useState(currentDoctor);
   const [availability, setAvailability] = useState({ chat: true, voice: false, video: false });
   const [activeTab, setActiveTab] = useState('overview');
   const [notifications, setNotifications] = useState(3);
 
+  // Keep localDoctor in sync
+  useEffect(() => {
+    setLocalDoctor(currentDoctor);
+  }, [currentDoctor]);
+
   // Sync availability from doctor record
   useEffect(() => {
-    if (currentDoctor) {
+    if (localDoctor) {
+      const doctorProfile = localDoctor.doctor || {};
       setAvailability({
-        chat: currentDoctor.is_available ?? true,
-        voice: currentDoctor.is_available ?? false,
+        chat: doctorProfile.availableForChat ?? true,
+        voice: doctorProfile.availableForVoiceCalls ?? false,
         video: false,
       });
     }
-  }, [currentDoctor]);
+  }, [localDoctor]);
 
   // Redirect to doctor login if not authenticated
   useEffect(() => {
@@ -154,6 +319,21 @@ const DoctorDashboardPage = () => {
     toast.error(`Declined request from ${req.patient}`);
   };
 
+  const handlePaymentSuccess = (updatedUserRecord) => {
+    const storedAuth = localStorage.getItem('doctorAuth');
+    if (storedAuth) {
+      try {
+        const parsed = JSON.parse(storedAuth);
+        parsed.record = updatedUserRecord;
+        localStorage.setItem('doctorAuth', JSON.stringify(parsed));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    setLocalDoctor(updatedUserRecord);
+    toast.success('Registration fee of ₦5,000 paid successfully! Welcome to the network.');
+  };
+
   // ── Loading ──────────────────────────────────────────────────────────────
   if (authLoading) {
     return (
@@ -168,7 +348,7 @@ const DoctorDashboardPage = () => {
   }
 
   // ── Not logged in ─────────────────────────────────────────────────────────
-  if (!currentDoctor) {
+  if (!localDoctor) {
     return (
       <div className="min-h-screen flex items-center justify-center"
         style={{ background: 'linear-gradient(135deg, #0f172a, #1e3a5f)' }}>
@@ -188,10 +368,24 @@ const DoctorDashboardPage = () => {
     );
   }
 
-  const doctorName = currentDoctor.full_name || 'Doctor';
-  const specialization = currentDoctor.specialization || 'Specialist';
-  const isVerified = currentDoctor.is_verified ?? false;
-  const rating = currentDoctor.rating ?? 5;
+  const doctorProfile = localDoctor.doctor || {};
+  const doctorName = localDoctor.full_name || 'Doctor';
+  const specialization = doctorProfile.specialization || 'Specialist';
+  const isVerified = doctorProfile.verificationStatus === 'Verified';
+  const isFeePaid = doctorProfile.registrationFeePaid ?? false;
+
+  // ── Registration Fee Payment Screen ─────────────────────────────────────────
+  if (!isFeePaid) {
+    return (
+      <DoctorPaymentGate 
+        doctor={localDoctor} 
+        onSuccess={handlePaymentSuccess} 
+        onLogout={handleLogout} 
+      />
+    );
+  }
+
+  const rating = doctorProfile.rating ?? 5;
   const initials = doctorName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   const isOnline = availability.chat || availability.voice || availability.video;
 

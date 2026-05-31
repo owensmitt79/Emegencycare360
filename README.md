@@ -40,10 +40,7 @@ EmergencyCare360/
     │   ├── middleware/   # Auth, rate-limit, logging
     │   ├── constants/
     │   └── utils/
-    └── pb/               # PocketBase backend (port 8090)
-        ├── pb_migrations/# DB schema migrations
-        ├── pb_hooks/     # Server-side hooks (JS)
-        └── pocketbase    # PocketBase binary
+    └──
 ```
 
 ---
@@ -80,8 +77,7 @@ This concurrently starts:
 |---------|-----|-------------|
 | React Web App | http://localhost:3000 | Frontend (Vite HMR) |
 | Express API | http://localhost:4000 | REST API |
-| PocketBase | http://localhost:8090 | DB + Auth + Admin UI |
-| PocketBase Admin | http://localhost:8090/_/ | Database admin panel |
+| 
 
 ### Individual Services
 

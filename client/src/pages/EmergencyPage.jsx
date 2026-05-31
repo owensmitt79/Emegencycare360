@@ -11,8 +11,10 @@ import Footer from '@/components/Footer.jsx';
 import EmergencyContactModal from '@/components/EmergencyContactModal.jsx';
 import { useGPSDetector } from '@/hooks/useGPSDetector.js';
 import apiClient from '@/lib/apiClient.js';
+import { useTranslation } from '@/contexts/TranslationContext.jsx';
 
 const EmergencyPage = () => {
+  const { t } = useTranslation();
   const { location, loading: gpsLoading, error: gpsError, detectLocation } = useGPSDetector(true);
   const [emergencyType, setEmergencyType] = useState('');
   const [symptoms, setSymptoms] = useState('');
@@ -165,9 +167,9 @@ const EmergencyPage = () => {
       <main className="py-12 min-h-screen">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-3">Request emergency help</h1>
+            <h1 className="text-4xl font-bold mb-3">{t('emergency_form_title')}</h1>
             <p className="text-lg text-muted-foreground">
-              Fill out the form below. Our response team will be dispatched immediately.
+              {t('emergency_form_subtitle')}
             </p>
           </div>
 
@@ -200,8 +202,8 @@ const EmergencyPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="rapidaid-card">
-              <Label className="text-base font-semibold mb-4 block">Select emergency type</Label>
-              <RadioGroup value={emergencyType} onValueChange={setEmergencyType}>
+              <Label className="text-base font-semibold mb-4 block">{t('emergency_type').replace(' *', '')}</Label>
+              <RadioGroup value={emergencyType} onValueChange={setEmergencyType} aria-label="Select emergency type">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {emergencyTypes.map((type) => (
                     <div key={type.value} className="flex items-center space-x-2">
@@ -221,13 +223,13 @@ const EmergencyPage = () => {
 
             <div className="rapidaid-card">
               <Label htmlFor="symptoms" className="text-base font-semibold mb-3 block">
-                Describe symptoms or situation
+                {t('symptoms')}
               </Label>
               <Textarea
                 id="symptoms"
                 value={symptoms}
                 onChange={(e) => setSymptoms(e.target.value)}
-                placeholder="Provide details about the emergency: symptoms, injuries, what happened..."
+                placeholder={t('symptoms_placeholder')}
                 rows={4}
                 className="text-gray-900 placeholder:text-gray-500"
               />
@@ -242,6 +244,7 @@ const EmergencyPage = () => {
                     <RadioGroup
                       value={triageAnswers[index]}
                       onValueChange={(value) => setTriageAnswers({ ...triageAnswers, [index]: value })}
+                      aria-label={q.question}
                     >
                       <div className="flex flex-wrap gap-2">
                         {q.options.map((option) => (
@@ -277,7 +280,7 @@ const EmergencyPage = () => {
                 className="flex-1 emergency-button bg-green-600 hover:bg-green-700 text-white rapidaid-button"
               >
                 <AlertCircle className="w-5 h-5 mr-2" />
-                Submit emergency request
+                {t('submit_request')}
               </Button>
               <Button
                 type="button"

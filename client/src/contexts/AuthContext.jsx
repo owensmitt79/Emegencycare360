@@ -49,9 +49,14 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const data = await apiClient.patientRegister(email, password, name, phone);
-      localStorage.setItem('userAuth', JSON.stringify(data));
-      setUser(data.record);
-      return { success: true, user: data.record };
+      if (data.token) {
+        localStorage.setItem('userAuth', JSON.stringify(data));
+        setUser(data.record);
+        return { success: true, user: data.record };
+      } else {
+        // Verification is required
+        return { success: true, needsVerification: true, message: data.message };
+      }
     } catch (error) {
       const message = error?.message || 'Registration failed';
       return { success: false, error: message };

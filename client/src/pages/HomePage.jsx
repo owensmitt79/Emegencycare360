@@ -11,29 +11,31 @@ import TrustSignals from '@/components/TrustSignals.jsx';
 import EmergencyFloatingButton from '@/components/EmergencyFloatingButton.jsx';
 import CookieConsent from '@/components/CookieConsent.jsx';
 import OfflineBanner from '@/components/OfflineBanner.jsx';
+import { useTranslation } from '@/contexts/TranslationContext.jsx';
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const emergencyActions = [
     {
       icon: Phone,
-      title: 'Call emergency line',
-      description: 'Speak directly with our response team',
+      title: t('call_emergency_line'),
+      description: t('speak_with_team'),
       href: 'tel:+2348012345678',
       color: 'bg-destructive hover:bg-destructive/90 text-destructive-foreground'
     },
     {
       icon: Stethoscope,
-      title: 'Get Help Now',
-      description: 'Submit your emergency details online',
+      title: t('get_help_now'),
+      description: t('submit_details'),
       action: () => navigate('/emergency'),
       color: 'bg-primary hover:bg-primary/90 text-primary-foreground'
     },
     {
       icon: MapPin,
-      title: 'Find nearest facility',
-      description: 'Locate the closest emergency center',
+      title: t('find_facility'),
+      description: t('locate_center'),
       href: '/coverage',
       color: 'bg-secondary hover:bg-secondary/90 text-secondary-foreground'
     }
@@ -93,10 +95,10 @@ const HomePage = () => {
               transition={{ duration: 0.6 }}
             >
               <h1 className="text-white mb-6 text-balance text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
-                Rapid, Life-Saving Emergency Care
+                {t('hero_title')}
               </h1>
               <p className="text-xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Professional medical emergency services across the Eastern Region and Nation wide. Our trained response teams are ready 24/7 to provide life-saving care when you need it most.
+                {t('hero_subtitle')}
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">

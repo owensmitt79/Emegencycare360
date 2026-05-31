@@ -172,26 +172,20 @@ const DoctorRegisterPage = () => {
 
     setIsLoading(true);
     try {
-      const submitData = new FormData();
-      
-      // Append all text fields
-      Object.keys(formData).forEach(key => {
-        submitData.append(key, formData[key]);
+      const response = await apiClient.request('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          full_name: formData.fullName,
+          phone: formData.phoneNumber,
+          role: 'doctor'
+        })
       });
       
-      // Set default verification status
-      submitData.append('verificationStatus', 'Pending');
-      submitData.append('emailVisibility', true);
-
-      // Append files
-      if (files.profilePicture) submitData.append('profilePicture', files.profilePicture);
-      if (files.professionalLicenseDoc) submitData.append('professionalLicenseDoc', files.professionalLicenseDoc);
-      if (files.proofOfSpecialization) submitData.append('proofOfSpecialization', files.proofOfSpecialization);
-
-      // Placeholder for API
-      console.log('Registering doctor...', submitData);
-      
-      toast.success('Registration successful! Please wait for verification.');
+      toast.success('Registration successful!', {
+        description: response.message || 'Verification link sent. Please verify your email, then sign in.'
+      });
       navigate('/doctors/login');
     } catch (error) {
       console.error('Registration error:', error);

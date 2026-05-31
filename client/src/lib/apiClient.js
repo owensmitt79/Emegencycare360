@@ -77,8 +77,23 @@ const apiClient = {
       method: 'POST',
       body: JSON.stringify({ email, password, full_name, phone }),
     });
-    localStorage.setItem('authToken', data.token);
+    if (data.token) {
+      localStorage.setItem('authToken', data.token);
+    }
     return data;
+  },
+
+  async verifyEmail(token) {
+    return await this.request('/auth/verify-email', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
+  },
+
+  async payDoctorRegistrationFee() {
+    return await this.request('/doctors/pay-registration-fee', {
+      method: 'POST',
+    });
   },
 
   async updateUser(id, data) {

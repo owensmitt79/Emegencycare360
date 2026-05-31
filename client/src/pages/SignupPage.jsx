@@ -53,10 +53,17 @@ const SignupPage = () => {
     );
     
     if (result.success) {
-      toast.success('Account created successfully', {
-        description: 'Welcome to Emergencycare360!'
-      });
-      navigate('/dashboard'); // Go to dashboard on successful signup
+      if (result.needsVerification) {
+        toast.success('Registration successful!', {
+          description: result.message || 'Please check your email to verify your account.'
+        });
+        navigate('/login');
+      } else {
+        toast.success('Account created successfully', {
+          description: 'Welcome to Emergencycare360!'
+        });
+        navigate('/dashboard');
+      }
     } else {
       toast.error(result.error);
     }

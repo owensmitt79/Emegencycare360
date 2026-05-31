@@ -1,30 +1,72 @@
-import mongoose from 'mongoose';
+import { DataTypes, Model } from 'sequelize';
+import { sequelize } from '../config/db.js';
+import { User } from './User.js';
 
-const doctorSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+export class Doctor extends Model {}
+
+Doctor.init({
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
   },
   specialization: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   verificationStatus: {
-    type: String,
-    enum: ['Pending', 'Verified', 'Rejected'],
-    default: 'Pending',
+    type: DataTypes.ENUM('Pending', 'Verified', 'Rejected'),
+    defaultValue: 'Pending',
   },
-  availableForChat: { type: Boolean, default: false },
-  availableForVoiceCalls: { type: Boolean, default: false },
-  availableForVideoCalls: { type: Boolean, default: false },
-  rating: { type: Number, default: 0 },
-  totalConsultations: { type: Number, default: 0 },
-  yearsOfExperience: { type: Number, default: 0 },
-  hospitalName: String,
-  consultationFee: { type: Number, default: 0 },
-  bio: String,
-  profilePictureUrl: String,
-}, { timestamps: true });
+  registrationFeePaid: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  availableForChat: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  availableForVoiceCalls: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  availableForVideoCalls: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  rating: {
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
+  },
+  totalConsultations: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  yearsOfExperience: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  hospitalName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  consultationFee: {
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
+  },
+  bio: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  profilePictureUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+}, {
+  sequelize,
+  modelName: 'Doctor',
+});
 
-export const Doctor = mongoose.model('Doctor', doctorSchema);
+// Define associations
+User.hasOne(Doctor, { foreignKey: 'userId', as: 'doctor', onDelete: 'CASCADE' });
+Doctor.belongsTo(User, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' });

@@ -4,12 +4,14 @@ import { Menu, X, User, LogOut, Stethoscope, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import LanguageSwitcher from '@/components/LanguageSwitcher.jsx';
 import { useAuth } from '@/contexts/AuthContext.jsx';
+import { useTranslation } from '@/contexts/TranslationContext.jsx';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, role, logout, user } = useAuth();
+  const { t } = useTranslation();
 
   // Hide the main header on doctor/admin dashboard pages (they have their own nav)
   const isDoctorDashboard = location.pathname.startsWith('/doctors/dashboard');
@@ -18,22 +20,22 @@ const Header = () => {
 
   const getNavLinks = () => {
     let links = [
-      { path: '/', label: 'Home' },
-      { path: '/services', label: 'Services' },
-      { path: '/about', label: 'About' },
-      { path: '/contact', label: 'Contact' },
+      { path: '/', label: t('home') },
+      { path: '/services', label: t('services') },
+      { path: '/about', label: t('about') },
+      { path: '/contact', label: t('contact') },
     ];
 
     if (role === 'dispatcher') {
-      links.push({ path: '/dispatcher', label: 'Dispatch Dashboard' });
-      links.push({ path: '/responder-tracking', label: 'Live Tracking' });
+      links.push({ path: '/dispatcher', label: t('dashboard') });
+      links.push({ path: '/responder-tracking', label: t('coverage') });
     } else if (role === 'admin') {
-      links.push({ path: '/responder-management', label: 'Responders' });
-      links.push({ path: '/hospital-directory', label: 'Hospitals' });
-      links.push({ path: '/dispatcher', label: 'Dispatch' });
+      links.push({ path: '/responder-management', label: t('services') });
+      links.push({ path: '/hospital-directory', label: t('about') });
+      links.push({ path: '/dispatcher', label: t('dashboard') });
     } else {
-      links.push({ path: '/emergency', label: 'Emergency' });
-      links.push({ path: '/emergency-request', label: 'Request Help' });
+      links.push({ path: '/emergency', label: t('emergency') });
+      links.push({ path: '/emergency-request', label: t('request_help') });
     }
 
     return links;
@@ -81,7 +83,7 @@ const Header = () => {
             <Link to="/doctors/login">
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
                 <Stethoscope className="w-4 h-4" />
-                Doctor Portal
+                {t('doctor_dashboard')}
               </Button>
             </Link>
 
@@ -89,7 +91,7 @@ const Header = () => {
             <Link to="/admin/login">
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
                 <Shield className="w-4 h-4" />
-                Admin
+                {t('admin_dashboard')}
               </Button>
             </Link>
             
@@ -103,13 +105,13 @@ const Header = () => {
                 </Link>
                 <Button variant="outline" size="sm" onClick={handleLogout} className="gap-2">
                   <LogOut className="w-4 h-4" />
-                  Logout
+                  {t('logout')}
                 </Button>
               </div>
             ) : (
               <Link to="/login">
                 <Button variant="default" size="sm" className="font-semibold">
-                  Login / Sign Up
+                  {t('login')} / {t('signup')}
                 </Button>
               </Link>
             )}

@@ -1,59 +1,82 @@
-import mongoose from 'mongoose';
+import { DataTypes, Model } from 'sequelize';
+import { sequelize } from '../config/db.js';
+import { User } from './User.js';
+import { Doctor } from './Doctor.js';
 
-// Ensure virtuals (like id) are included when converting to JSON
-mongoose.set('toJSON', {
-  virtuals: true,
-  transform: (doc, converted) => {
-    delete converted._id;
-    delete converted.__v;
-  }
-});
+export class Responder extends Model {}
+Responder.init({
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  employee_id: { type: DataTypes.STRING },
+  certification_number: { type: DataTypes.STRING },
+  status: { type: DataTypes.STRING, defaultValue: 'available' },
+  rating: { type: DataTypes.FLOAT, defaultValue: 0 },
+  total_responses: { type: DataTypes.INTEGER, defaultValue: 0 },
+  current_latitude: { type: DataTypes.FLOAT },
+  current_longitude: { type: DataTypes.FLOAT },
+  base_location_id: { type: DataTypes.JSON, allowNull: true },
+}, { sequelize, modelName: 'Responder' });
 
-// We can put all the minor models here for now to speed up the migration
-const responderSchema = new mongoose.Schema({
-  employee_id: String,
-  certification_number: String,
-  status: { type: String, default: 'available' },
-  rating: { type: Number, default: 0 },
-  total_responses: { type: Number, default: 0 },
-  current_latitude: Number,
-  current_longitude: Number,
-  base_location_id: Object
-}, { timestamps: true });
-export const Responder = mongoose.model('Responder', responderSchema);
+export class Ambulance extends Model {}
+Ambulance.init({
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  vehicle_number: { type: DataTypes.STRING },
+  type: { type: DataTypes.STRING },
+  status: { type: DataTypes.STRING, defaultValue: 'available' },
+  fuel_level: { type: DataTypes.FLOAT },
+  current_latitude: { type: DataTypes.FLOAT },
+  current_longitude: { type: DataTypes.FLOAT },
+}, { sequelize, modelName: 'Ambulance' });
 
-const ambulanceSchema = new mongoose.Schema({
-  vehicle_number: String,
-  type: String,
-  status: { type: String, default: 'available' },
-  fuel_level: Number,
-  current_latitude: Number,
-  current_longitude: Number
-}, { timestamps: true });
-export const Ambulance = mongoose.model('Ambulance', ambulanceSchema);
+export class PartnerHospital extends Model {}
+PartnerHospital.init({
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  name: { type: DataTypes.STRING },
+  address: { type: DataTypes.STRING },
+  emergency_phone: { type: DataTypes.STRING },
+  capacity_status: { type: DataTypes.STRING },
+  latitude: { type: DataTypes.FLOAT },
+  longitude: { type: DataTypes.FLOAT },
+}, { sequelize, modelName: 'PartnerHospital' });
 
-const partnerHospitalSchema = new mongoose.Schema({
-  name: String,
-  address: String,
-  emergency_phone: String,
-  capacity_status: String,
-  latitude: Number,
-  longitude: Number
-}, { timestamps: true });
-export const PartnerHospital = mongoose.model('PartnerHospital', partnerHospitalSchema);
+export class Consultation extends Model {}
+Consultation.init({
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  status: { type: DataTypes.STRING, defaultValue: 'Pending' },
+  consultationDate: { type: DataTypes.DATE },
+}, { sequelize, modelName: 'Consultation' });
 
-const consultationSchema = new mongoose.Schema({
-  patient: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  doctor: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' },
-  status: { type: String, default: 'Pending' },
-  consultationDate: Date,
-}, { timestamps: true });
-export const Consultation = mongoose.model('Consultation', consultationSchema);
+export class Message extends Model {}
+Message.init({
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  roomId: { type: DataTypes.STRING, allowNull: false },
+  sender: { type: DataTypes.STRING },
+  senderName: { type: DataTypes.STRING },
+  text: { type: DataTypes.TEXT },
+}, { sequelize, modelName: 'Message' });
 
-const messageSchema = new mongoose.Schema({
-  roomId: { type: String, required: true },
-  sender: String,
-  senderName: String,
-  text: String,
-}, { timestamps: true });
-export const Message = mongoose.model('Message', messageSchema);
+// Associations
+User.hasMany(Consultation, { foreignKey: 'patientId', as: 'consultations', onDelete: 'CASCADE' });
+Consultation.belongsTo(User, { foreignKey: 'patient', as: 'patientUser', onDelete: 'CASCADE' }); // Patient User relation
+
+Doctor.hasMany(Consultation, { foreignKey: 'doctorId', as: 'consultations', onDelete: 'CASCADE' });
+Consultation.belongsTo(Doctor, { foreignKey: 'doctor', as: 'doctorProfile', onDelete: 'CASCADE' }); // Doctor profile relation

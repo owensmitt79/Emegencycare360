@@ -6,6 +6,7 @@ import { AuthProvider } from '@/contexts/AuthContext.jsx';
 import { DoctorAuthProvider } from '@/contexts/DoctorAuthContext.jsx';
 import { AdminAuthProvider } from '@/contexts/AdminAuthContext.jsx';
 import { ConsultantProvider } from '@/contexts/ConsultantProvider.jsx';
+import { TranslationProvider } from '@/contexts/TranslationContext.jsx';
 
 // Public Pages
 import HomePage from '@/pages/HomePage.jsx';
@@ -17,6 +18,7 @@ import AboutPage from '@/pages/AboutPage.jsx';
 import ContactPage from '@/pages/ContactPage.jsx';
 import LoginPage from '@/pages/LoginPage.jsx';
 import SignupPage from '@/pages/SignupPage.jsx';
+import VerifyEmailPage from '@/pages/VerifyEmailPage.jsx';
 import DashboardPage from '@/pages/DashboardPage.jsx';
 import ConsultationRoomPage from '@/pages/ConsultationRoomPage.jsx';
 
@@ -35,7 +37,8 @@ import ConsultantBar from '@/components/ConsultantBar.jsx';
 
 function App() {
   return (
-    <AuthProvider>
+    <TranslationProvider>
+      <AuthProvider>
       <DoctorAuthProvider>
         <AdminAuthProvider>
           <ConsultantProvider>
@@ -53,6 +56,7 @@ function App() {
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
+                <Route path="/verify-email" element={<VerifyEmailPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/consultation/:doctorId" element={<ConsultationRoomPage />} />
                 
@@ -76,6 +80,7 @@ function App() {
         </AdminAuthProvider>
       </DoctorAuthProvider>
     </AuthProvider>
+    </TranslationProvider>
   );
 }
 
