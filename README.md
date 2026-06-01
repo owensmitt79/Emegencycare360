@@ -1,6 +1,6 @@
 # EmergencyCare360
 
-> A full-stack emergency healthcare platform built with **React**, **Node.js/Express**, and **PocketBase** — connecting patients, doctors, and emergency responders in real time.
+> A full-stack emergency healthcare platform built with **Next.js (App Router)**, **MySQL (Sequelize)**, and compliant with **US Industry Standards** (HIPAA for data security, ADA/WCAG for accessibility, and E.164 for telephony).
 
 ---
 
@@ -8,13 +8,17 @@
 
 | Layer | Technology |
 |-------|-----------|
-| **Frontend** | React 18, React Router v7, Vite 7, TailwindCSS 3, Radix UI, Framer Motion |
-| **Backend API** | Node.js, Express 5, Helmet, Morgan, express-rate-limit |
-| **Database / Auth** | PocketBase (self-hosted, embedded) |
-| **Maps** | Leaflet + React-Leaflet |
+| **Framework** | Next.js 14 (App Router) |
+| **Frontend** | React 18, TailwindCSS 3, Radix UI, Framer Motion |
+| **Database** | MySQL (with automated database creation and table syncing) |
+| **ORM** | Sequelize 6 |
+| **Maps** | Leaflet + React-Leaflet (loaded dynamically for client-only SSR bypass) |
 | **Charts** | Recharts |
-| **Forms** | React Hook Form + Zod |
-| **Monorepo** | npm Workspaces + Concurrently |
+| **Forms / Validation** | React Hook Form + Zod |
+| **Security & Privacy** | AES-256-GCM symmetric encryption for PHI, JWT token session management, HIPAA access audit trails |
+| **Telephony** | E.164 phone number formatting and validation |
+| **Multilingual** | Context translation manager synced with Google Translate widgets (English, Yoruba, Igbo, Hausa) |
+| **Email Service** | Nodemailer with fallback SMTP dispatch and Ethereal mockup previews |
 
 ---
 
@@ -22,25 +26,57 @@
 
 ```
 EmergencyCare360/
-├── package.json              # Root config (concurrently)
-├── client/                   # React frontend (Vite, port 3000)
-│   ├── src/
-│   │   ├── App.jsx       # Root router
-│   │   ├── pages/        # All page components
-│   │   ├── components/   # Shared UI components
-│   │   ├── contexts/     # AuthContext, DoctorAuthContext, ConsultantProvider
-│   │   ├── hooks/        # Custom React hooks
-│   │   └── lib/          # Utilities & PocketBase client
-│   ├── vite.config.js
-│   └── tailwind.config.js
-└── server/                   # Backend API and Database
-    ├── src/              # Express REST API (Node.js)
-    │   ├── main.js       # Server entry point
-    │   ├── routes/       # API route handlers
-    │   ├── middleware/   # Auth, rate-limit, logging
-    │   ├── constants/
-    │   └── utils/
-    └──
+├── next.config.js            # Next.js configurations & Webpack routing aliases
+├── tailwind.config.js        # Hoisted Tailwind theme settings
+├── package.json              # Unified full-stack dependencies and scripts
+├── jsconfig.json             # Import aliases (@/*)
+└── src/
+    ├── app/                  # Next.js App Router (Pages, layouts & API endpoints)
+    │   ├── api/              # API Route Handlers (auth, emergency-requests, etc.)
+    │   ├── globals.css       # Stylesheet (Tailwind directives & map overrides)
+    │   ├── layout.jsx        # Server Layout (Google Translate initialization script)
+    │   └── client-layout.jsx # Client Layout (Auth, translation, and consultant contexts)
+    ├── components/           # Reusable UI components
+    ├── contexts/             # State managers (Patient/Doctor/Admin Auth, Translation)
+    ├── db/                   # MySQL Sequelize configuration & model schemas
+    │   ├── db.js             # Database entry (Sequelize client and database creation helper)
+    │   └── models/           # Sequelize Models (User, Doctor, EmergencyRequest, AuditLog, OtherModels)
+    ├── hooks/                # Custom React hooks
+    ├── lib/                  # Frontend API client and routing compatibility layer
+    │   ├── apiClient.js      # Unified relative path fetch helper
+    │   └── router-compat.jsx # Compatibility shim mapping react-router-dom to next/navigation
+    ├── server/               # Server-side utils
+    │   └── utils/            # HIPAA AES-256-GCM crypto, nodemailer helpers, and activity logger
+    └── views/                # React page-view component instances
+```
+
+---
+
+## Environment Variables
+
+Configure a `.env` file at the root workspace:
+
+```env
+# Database Settings
+DB_NAME=emergencycare360
+DB_USER=root
+DB_PASS=
+DB_HOST=localhost
+DB_PORT=3306
+
+# Security
+JWT_SECRET=your_jwt_secret_key_here
+PATIENT_DATA_KEY=your_symmetric_32_byte_phi_aes_key_here
+
+# App Details
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Optional SMTP Settings (defaults to Ethereal email if left blank)
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=
+SMTP_PASS=
 ```
 
 ---
@@ -48,167 +84,52 @@ EmergencyCare360/
 ## Quick Start
 
 ### Prerequisites
-
 - **Node.js** v18+ (see `.nvmrc`)
-- **npm** v9+
+- **MySQL Server** running locally or remotely on port `3306`
 
 ### Install Dependencies
-
 ```bash
-cd "path/to/EmergencyCare360"
 npm install
 ```
 
-If you encounter peer dependency conflicts:
-
-```bash
-npm install --legacy-peer-deps
-```
-
-### Start All Services (Dev)
-
+### Start Development Server
 ```bash
 npm run dev
 ```
 
-This concurrently starts:
-
-| Service | URL | Description |
-|---------|-----|-------------|
-| React Web App | http://localhost:3000 | Frontend (Vite HMR) |
-| Express API | http://localhost:4000 | REST API |
-| 
-
-### Individual Services
-
-```bash
-# Frontend only
-npm run dev:client
-
-# API only
-npm run dev:server
-
-# PocketBase only
-npm run dev:pb
-```
-
----
-
-## Environment Variables
-
-Create `apps/api/.env` (already present):
-
-```env
-PB_ENCRYPTION_KEY=your_encryption_key_here
-```
-
-> **Note:** PocketBase requires `PB_ENCRYPTION_KEY` for encryption at rest. Generate a secure random key for production.
-
----
-
-## Pages & Routes
-
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | Home | Landing page with emergency CTA |
-| `/emergency` | Emergency | Emergency alert & request dispatch |
-| `/services` | Services | Platform service offerings |
-| `/coverage` | Coverage Map | Interactive map of service coverage (Leaflet) |
-| `/firstaid` | First Aid | First aid guides & tips |
-| `/about` | About | Team and mission info |
-| `/contact` | Contact | Contact form |
-
-### Authenticated / Dashboard Pages
-
-| Page | Role | Description |
-|------|------|-------------|
-| `DashboardPage` | Patient | User dashboard & emergency history |
-| `DoctorDashboardPage` | Doctor | Doctor-specific dashboard |
-| `DoctorLoginPage` | Doctor | Doctor sign-in |
-| `DoctorRegisterPage` | Doctor | Doctor registration & profile setup |
-| `DoctorsAvailabilityPage` | Public | Browse available doctors |
-| `DispatcherDashboard` | Dispatcher | Manage and dispatch emergency requests |
-| `EmergencyRequestForm` | Patient | Submit an emergency request |
-| `EmergencyRequestStatus` | Patient | Track live status of a request |
-| `HospitalDirectory` | Public | Browse registered hospitals |
-| `ResponderManagementPanel` | Admin | Manage responders |
-| `ResponderTrackingMap` | Admin/Dispatcher | Live responder map tracking |
-| `UserProfilePage` | Patient | User profile management |
+Next.js will:
+1. Connect to your MySQL server and run `CREATE DATABASE IF NOT EXISTS \`emergencycare360\`;`.
+2. Synchronize all tables using `sequelize.sync({ alter: true })`.
+3. Boot the application on [http://localhost:3000](http://localhost:3000).
 
 ---
 
 ## Key Features
 
-- 🚨 **Emergency Request System** — Submit, dispatch, and track emergency requests in real time
-- 🗺️ **Coverage Map** — Interactive Leaflet map showing service coverage zones and responder positions
-- 👨‍⚕️ **Doctor Portal** — Doctor registration, login, availability management, and dashboard
-- 🚑 **Dispatcher Dashboard** — Central hub for managing and routing emergency responses
-- 🏥 **Hospital Directory** — Browse and search registered hospitals
-- 🩺 **First Aid Guides** — Built-in first aid reference content
-- 👤 **Multi-Role Auth** — Separate auth flows for Patients, Doctors, and Dispatchers (via PocketBase)
-- 📊 **Analytics** — Charts (Recharts) for response metrics and trends
-- 🔒 **Security** — Helmet headers, CORS, rate limiting on the Express API
+1. **HIPAA Security compliance:**
+   - Patient Protected Health Information (PHI) fields (`blood_type`, `allergies`, `medications`, `emergency_contacts`) are automatically encrypted before writing to MySQL using **AES-256-GCM**, and decrypted on fetch.
+   - Comprehensive trace logs (`AuditLogs` table) record details of authentication events (`LOGIN_SUCCESS`, `LOGIN_FAILED`), patient record retrievals (`READ_PHI`), and profile updates (`UPDATE_PHI`).
+2. **Email Verification:**
+   - Signup sends a 32-character token. Logins are locked until email verification is complete.
+   - If no production SMTP is defined, details are automatically printed to the terminal console with a clickable mock **Ethereal email preview link**.
+3. **ADA Accessibility (WCAG 2.1):**
+   - Appended ARIA attributes on screen reader inputs, dynamic selectors, and triage questionnaires. Optimized contrast configurations.
+4. **Multilingual Google Translate Sync:**
+   - Dropdown switches between **English, Yoruba, Igbo, and Hausa**.
+   - Language selector modifies the browser's `googtrans` cookie, triggering an automated translation of all pages, dashboards, and maps on-the-fly, while custom overrides hide the Translate banner to feel native.
+5. **Doctor Registration billing:**
+   - Doctors are required to complete a mock ₦5,000 registration fee payment before their account is verified and consulting dashboards are unlocked.
 
 ---
 
-## Auth Contexts
+## Production Build & Deploy
 
-The frontend uses three React context providers:
-
-| Context | File | Manages |
-|---------|------|---------|
-| `AuthProvider` | `contexts/AuthContext.jsx` | Patient authentication |
-| `DoctorAuthProvider` | `contexts/DoctorAuthContext.jsx` | Doctor authentication |
-| `ConsultantProvider` | `contexts/ConsultantProvider.jsx` | Consultant/dispatcher state |
-
----
-
-## Production Build
-
+Compile the production package (compiles assets, pages, and dynamic serverless endpoints):
 ```bash
 npm run build
 ```
 
-Outputs the compiled frontend to `dist/apps/web/`.
-
+Run the built application:
 ```bash
 npm run start
 ```
-
-Starts the Express API and PocketBase in production mode. The API serves the built frontend as static assets.
-
----
-
-## Database Migrations
-
-```bash
-# Apply pending migrations
-npm run migrations:up --prefix server/pb
-
-# Revert last migration
-npm run migrations:revert --prefix server/pb
-
-# Snapshot current schema
-npm run migrations:snapshot --prefix server/pb
-
-# Update PocketBase binary
-npm run update --prefix server/pb
-```
-
----
-
-## Linting
-
-```bash
-# Lint all workspaces
-npm run lint
-
-# Lint with warnings
-npm run lint:warn --prefix apps/web
-```
-
----
-
-## Contact
-
-For support or enquiries, please use the [Contact Page](http://localhost:3000/contact) in the application.
