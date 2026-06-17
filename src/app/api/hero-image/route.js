@@ -1,8 +1,9 @@
 import fs from 'fs';
+import path from 'path';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const filePath = 'C:\\Users\\user_pc\\.gemini\\antigravity-ide\\brain\\54e2199f-d4ce-452e-b03b-cad8eb474413\\medical_hero_image_1780311578400.png';
+  const filePath = path.resolve(process.cwd(), 'Public/images/hero-image.png');
   try {
     const fileBuffer = fs.readFileSync(filePath);
     return new Response(fileBuffer, {

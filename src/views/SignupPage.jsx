@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext.jsx';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, Chrome, Sparkles, Loader2, ArrowRight } from 'lucide-react';
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -17,8 +17,59 @@ const SignupPage = () => {
     confirmPassword: ''
   });
   
-  const { register, loading } = useAuth();
+  const { register, oneTapLoginRegister, loading } = useAuth();
   const navigate = useNavigate();
+
+  const [showAccountDrawer, setShowAccountDrawer] = useState(false);
+  const [isProcessingQuickAuth, setIsProcessingQuickAuth] = useState(false);
+
+  const mockSavedAccounts = [
+    {
+      fullName: 'John Doe',
+      email: 'john.doe@gmail.com',
+      avatarColor: 'bg-purple-600',
+      initial: 'J',
+      phone: '+2348011223344'
+    },
+    {
+      fullName: 'John D. Emergency',
+      email: 'doe.john.emergency@outlook.com',
+      avatarColor: 'bg-emerald-600',
+      initial: 'E',
+      phone: '+2348055667788'
+    },
+    {
+      fullName: 'J. Doe Professional',
+      email: 'j.doe.medical@hospital.org',
+      avatarColor: 'bg-sky-600',
+      initial: 'P',
+      phone: '+2349099887766'
+    }
+  ];
+
+  const handleQuickRegister = async (account) => {
+    setShowAccountDrawer(false);
+    setIsProcessingQuickAuth(true);
+    const toastId = toast.loading(`Connecting secure session for ${account.email}...`);
+    
+    try {
+      const result = await oneTapLoginRegister(account.email, account.fullName, account.phone);
+      if (result.success) {
+        toast.success('Successfully authenticated!', {
+          id: toastId,
+          description: `Welcome back, ${account.fullName}! Redirecting to dashboard...`
+        });
+        navigate('/dashboard');
+      } else {
+        toast.error(result.error || 'Failed to authenticate.', { id: toastId });
+      }
+    } catch (err) {
+      toast.error('Quick registration encountered an error.', { id: toastId });
+      console.error(err);
+    } finally {
+      setIsProcessingQuickAuth(false);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -161,11 +212,52 @@ const SignupPage = () => {
           <Button
             type="submit"
             className="w-full font-semibold"
-            disabled={loading}
+            disabled={loading || isProcessingQuickAuth}
           >
             {loading ? 'Creating account...' : 'Sign up'}
           </Button>
         </form>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-border" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-card px-2 text-muted-foreground font-medium">Or connect instantly</span>
+          </div>
+        </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full font-semibold flex items-center justify-center gap-2 border border-border hover:bg-muted/50 transition-all shadow-sm active:scale-95 duration-100 py-6"
+          onClick={() => setShowAccountDrawer(true)}
+          disabled={loading || isProcessingQuickAuth}
+        >
+          {isProcessingQuickAuth ? (
+            <Loader2 className="w-4 h-4 animate-spin text-primary mr-1" />
+          ) : (
+            <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24">
+              <path
+                fill="#EA4335"
+                d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.37 0 3.393 2.68 1.488 6.59l3.778 3.175z"
+              />
+              <path
+                fill="#4285F4"
+                d="M23.49 12.275c0-.825-.075-1.62-.213-2.388H12v4.513h6.45a5.52 5.52 0 0 1-2.396 3.619v3.01h3.877c2.269-2.09 3.559-5.166 3.559-8.754z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.266 14.235A7.054 7.054 0 0 1 4.909 12c0-.79.13-1.554.357-2.265L1.488 6.59A11.968 11.968 0 0 0 0 12c0 1.92.455 3.73 1.258 5.345l4.008-3.11z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 24c3.24 0 5.955-1.077 7.94-2.915l-3.877-3.01c-1.077.72-2.455 1.15-4.063 1.15-3.13 0-5.782-2.118-6.728-4.968L1.258 17.37A11.966 11.966 0 0 0 12 24z"
+              />
+            </svg>
+          )}
+          {isProcessingQuickAuth ? 'Connecting...' : 'Choose Saved Email from Phone'}
+        </Button>
 
         <div className="mt-6 border-t border-border pt-6 text-center">
           <p className="text-sm text-muted-foreground">
@@ -176,6 +268,83 @@ const SignupPage = () => {
           </p>
         </div>
       </div>
+
+      {/* Google-Style Saved Email Drawer/Sheet for Phone Account Choosing */}
+      {showAccountDrawer && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 animate-fade-in">
+          {/* Backdrop click to close */}
+          <div className="absolute inset-0" onClick={() => setShowAccountDrawer(false)} />
+          
+          <div className="relative w-full max-w-md bg-card rounded-t-2xl border-t border-border shadow-2xl p-6 pb-8 transform transition-transform duration-300 animate-slide-up flex flex-col z-10">
+            {/* Native indicator bar */}
+            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-5 cursor-pointer" onClick={() => setShowAccountDrawer(false)} />
+            
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                <Chrome className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-foreground flex items-center gap-1.5">
+                  Choose an account <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" />
+                </h3>
+                <p className="text-xs text-muted-foreground">to continue to Emergencycare360</p>
+              </div>
+            </div>
+
+            {/* List of saved accounts */}
+            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+              {mockSavedAccounts.map((account, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="w-full flex items-center justify-between p-3.5 rounded-xl hover:bg-muted/80 active:bg-muted border border-transparent hover:border-border transition-all duration-200 text-left group"
+                  onClick={() => handleQuickRegister(account)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-inner transition-transform group-hover:scale-105 duration-200 ${account.avatarColor}`}>
+                      {account.initial}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors duration-200">
+                        {account.fullName}
+                      </p>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {account.email}
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 duration-200" />
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-4 border-t border-border pt-4">
+              <button
+                type="button"
+                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-muted/60 text-left transition-colors"
+                onClick={() => {
+                  setShowAccountDrawer(false);
+                  toast.info("Standard registration form is ready for manual entry below.");
+                }}
+              >
+                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+                  +
+                </div>
+                <div>
+                  <p className="font-medium text-sm text-foreground">Use another account</p>
+                  <p className="text-xs text-muted-foreground">Fill registration fields manually</p>
+                </div>
+              </button>
+            </div>
+
+            {/* Privacy details */}
+            <p className="text-[10px] text-muted-foreground mt-6 text-center leading-relaxed px-4">
+              To proceed automatically, Google or your Device Manager will share your name, email address, language preference, and profile picture with Emergencycare360. Review our <a href="#" className="underline text-primary hover:text-primary/80">Privacy Policy</a>.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

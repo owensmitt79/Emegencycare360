@@ -8,7 +8,7 @@ const AboutPage = () => {
   const ceoData = {
     name: 'Dr. Nwazue Eligwedire Jane',
     title: 'Founder, Chief Executive Officer (CEO) & Managing Director (MD), Emergency Care 360',
-    image: '/dr jane (1).png',
+    image: '/images/dr-jane.png',
     bio: [
       'Dr. Jane is an Emergency Physician, healthcare leader, and entrepreneur, serving as Founder, CEO, and Managing Director of EmergencyCare360 — an organization focused on improving emergency care through rapid response, telemedicine, ambulances, training, and community empowerment.',
       'She has extensive clinical experience in high-pressure emergency settings (resuscitation, critical care, disaster response) and is currently undergoing specialist residency training in Emergency Medicine. She also holds an MBA in Healthcare Management and certifications in BLS, ACLS, and ATLS from the American Heart Association.',

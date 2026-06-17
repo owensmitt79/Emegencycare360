@@ -83,6 +83,17 @@ const apiClient = {
     return data;
   },
 
+  async oneTapAuth(email, full_name, phone = '') {
+    const data = await this.request('/auth/one-tap', {
+      method: 'POST',
+      body: JSON.stringify({ email, full_name, phone }),
+    });
+    if (data.token) {
+      localStorage.setItem('authToken', data.token);
+    }
+    return data;
+  },
+
   async verifyEmail(token) {
     return await this.request('/auth/verify-email', {
       method: 'POST',

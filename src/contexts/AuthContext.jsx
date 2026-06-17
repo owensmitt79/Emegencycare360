@@ -65,6 +65,21 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const oneTapLoginRegister = useCallback(async (email, name, phone = '') => {
+    setLoading(true);
+    try {
+      const data = await apiClient.oneTapAuth(email, name, phone);
+      localStorage.setItem('userAuth', JSON.stringify(data));
+      setUser(data.record);
+      return { success: true, user: data.record };
+    } catch (error) {
+      const message = error?.message || 'Quick registration failed';
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const logout = useCallback(() => {
     apiClient.logout();
     localStorage.removeItem('userAuth');
@@ -81,6 +96,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     register,
+    oneTapLoginRegister,
     logout,
     refreshUser,
     isAuthenticated: !!user,
