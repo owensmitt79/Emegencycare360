@@ -1,0 +1,39 @@
+{
+  "name": "emergencycare360-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Backend API for EmergencyCare360",
+  "main": "src/index.js",
+  "private": true,
+  "scripts": {
+    "dev": "node --trace-deprecation src/index.js",
+    "start": "node src/index.js",
+    "lint": "eslint . --quiet"
+  },
+  "keywords": [
+    "emergency",
+    "healthcare",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.0.1",
+    "express-rate-limit": "^8.3.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.22.4",
+    "nodemailer": "^8.0.10",
+    "sequelize": "^6.37.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "eslint": "^9.39.4",
+    "eslint-plugin-import": "^2.32.0",
+    "globals": "^15.14.0"
+  }
+}

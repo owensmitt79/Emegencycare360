@@ -35,7 +35,7 @@ const EmergencyFloatingButton = () => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-200 active:scale-[0.95] flex items-center justify-center"
+        className="fixed bottom-24 right-6 z-40 w-16 h-16 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-200 active:scale-[0.95] flex items-center justify-center"
         aria-label="Emergency help"
       >
         <AlertCircle className="w-8 h-8" />

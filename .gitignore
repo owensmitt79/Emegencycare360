@@ -130,3 +130,7 @@ dist-ssr
 # IDE
 .vscode/
 .idea/
+
+# Temporary Antigravity debug runner files
+run_build.js
+src/app/api/run-git-cmd/

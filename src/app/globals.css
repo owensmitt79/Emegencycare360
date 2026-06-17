@@ -132,3 +132,35 @@ iframe.goog-te-banner-frame,
 body {
   top: 0px !important;
 }
+
+@keyframes blob1 {
+  0% { transform: translate(0%, 0%) scale(1) rotate(0deg); }
+  25% { transform: translate(10%, 5%) scale(1.2) rotate(45deg); }
+  50% { transform: translate(-5%, -10%) scale(0.9) rotate(-45deg); }
+  100% { transform: translate(0%, 0%) scale(1) rotate(0deg); }
+}
+@keyframes blob2 {
+  0% { transform: translate(0%, 0%) scale(1) rotate(0deg); }
+  25% { transform: translate(-10%, -10%) scale(1.3) rotate(-30deg); }
+  50% { transform: translate(5%, 5%) scale(0.8) rotate(30deg); }
+  100% { transform: translate(0%, 0%) scale(1) rotate(0deg); }
+}
+@keyframes blob3 {
+  0% { transform: translate(0%, 0%) scale(1); }
+  25% { transform: translate(5%, -15%) scale(1.1); }
+  50% { transform: translate(-5%, 10%) scale(1.2); }
+  100% { transform: translate(0%, 0%) scale(1); }
+}
+
+.animate-blob1 {
+  animation: blob1 25s linear infinite;
+  will-change: transform;
+}
+.animate-blob2 {
+  animation: blob2 30s linear infinite;
+  will-change: transform;
+}
+.animate-blob3 {
+  animation: blob3 20s linear infinite;
+  will-change: transform;
+}

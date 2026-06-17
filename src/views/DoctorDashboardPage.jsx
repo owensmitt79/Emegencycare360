@@ -677,8 +677,14 @@ const DoctorDashboardPage = () => {
                 </div>
                 <p className="text-slate-400 text-sm mb-1">{specialization}</p>
                 <p className="text-slate-600 text-xs font-mono">{currentDoctor.email}</p>
+                {doctorProfile.staffNumber && (
+                  <p className="text-slate-400 text-xs mt-1.5 flex items-center gap-1.5">
+                    <span className="text-slate-500 font-semibold uppercase tracking-wider text-[9px]">Staff Number</span>
+                    <span className="font-mono bg-white/5 border border-white/10 px-2 py-0.5 rounded text-slate-300 text-[10px]">{doctorProfile.staffNumber}</span>
+                  </p>
+                )}
                 {currentDoctor.hospital && (
-                  <p className="text-slate-500 text-xs mt-0.5">🏥 {currentDoctor.hospital}</p>
+                  <p className="text-slate-500 text-xs mt-1.5">🏥 {currentDoctor.hospital}</p>
                 )}
               </div>
 

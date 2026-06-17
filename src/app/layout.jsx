@@ -12,8 +12,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <div id="google_translate_element" style={{ display: 'none' }}></div>
-        <Script id="google-translate-init" strategy="beforeInteractive">
-          {`
+        <Script id="google-translate-init" strategy="afterInteractive" dangerouslySetInnerHTML={{
+          __html: `
             function googleTranslateElementInit() {
               new google.translate.TranslateElement({
                 pageLanguage: 'en',
@@ -21,8 +21,8 @@ export default function RootLayout({ children }) {
                 autoDisplay: false
               }, 'google_translate_element');
             }
-          `}
-        </Script>
+          `
+        }} />
         <Script 
           src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
           strategy="afterInteractive"

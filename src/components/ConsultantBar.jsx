@@ -61,7 +61,7 @@ const ConsultantBar = () => {
 
   if (!isOpen) {
     return (
-      <div className="fixed bottom-6 left-6 z-50 animate-fade-in">
+      <div className="fixed bottom-6 right-6 z-50 animate-fade-in">
         <button
           onClick={toggleConsultant}
           className="relative flex items-center gap-3 bg-[#1E3A8A] hover:bg-[#1E3A8A]/90 text-white px-5 py-3 rounded-full shadow-lg transition-transform hover:scale-105"
@@ -93,7 +93,7 @@ const ConsultantBar = () => {
       />
       
       {/* Main Panel */}
-      <div className="fixed bottom-0 left-0 right-0 md:bottom-6 md:left-6 md:right-auto w-full md:w-[380px] h-[85vh] md:h-[600px] bg-background z-50 md:rounded-2xl consultant-panel flex flex-col overflow-hidden animate-slide-in">
+      <div className="fixed bottom-0 left-0 right-0 md:bottom-6 md:right-6 md:left-auto w-full md:w-[380px] h-[85vh] md:h-[600px] bg-background z-50 md:rounded-2xl consultant-panel flex flex-col overflow-hidden animate-slide-in">
         
         {/* Header */}
         <div className="bg-[#1E3A8A] text-white p-4 flex items-center justify-between shrink-0">

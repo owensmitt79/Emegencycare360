@@ -57,95 +57,117 @@ const ContactPage = () => {
 
 
 
-      <main className="py-12 min-h-screen">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-3">Contact us</h1>
-            <p className="text-lg text-muted-foreground">
-              We're here to help 24/7. Reach out for emergencies or general inquiries.
+      <main className="min-h-screen bg-slate-50 pb-20">
+        {/* Formal Hero Section */}
+        <div className="bg-slate-900 text-white py-20 border-b border-slate-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">Corporate Directory & Support</h1>
+            <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-light">
+              Connect with Emergencycare360's administrative offices and clinical dispatch centers. 
+              Our emergency response teams operate 24/7/365 to ensure immediate medical intervention.
             </p>
           </div>
+        </div>
 
-          <div className="rapidaid-card bg-destructive text-destructive-foreground mb-12 text-center">
-            <h2 className="text-2xl font-bold mb-2">Emergency hotline</h2>
-            <a href="tel:+2347038787313" className="text-4xl font-bold hover:opacity-80 transition-opacity duration-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+          <div className="bg-white rounded-xl shadow-lg shadow-red-900/5 border border-slate-200 mb-12 text-center p-8 border-t-4 border-t-red-600">
+            <h2 className="text-xs uppercase tracking-widest font-bold text-red-600 mb-3">Priority Emergency Dispatch Hotline</h2>
+            <a href="tel:+2347038787313" className="text-4xl md:text-5xl font-extrabold text-slate-900 hover:text-red-600 transition-colors duration-200">
               +234 703 878 7313
             </a>
-            <p className="mt-3 text-destructive-foreground/90">Available 24 hours a day, 7 days a week</p>
+            <p className="mt-4 text-slate-500 font-medium text-sm">Available 24 hours a day, 7 days a week. All calls are recorded for clinical quality assurance.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             <div className="space-y-6">
-              <div className="rapidaid-card">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6 text-primary" />
+              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-6 h-6 text-slate-700" />
                   </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Phone numbers</h3>
-                    <div className="space-y-1 text-sm text-muted-foreground">
-                      <p>Emergency: <a href="tel:+2347038787313" className="text-primary hover:underline">+234 703 878 7313</a></p>
-                      <p>General inquiries: <a href="tel:+2347038787313" className="text-primary hover:underline">+234 703 878 7313</a></p>
-                      <p>Corporate services: <a href="tel:+2347038787313" className="text-primary hover:underline">+234 703 878 7313</a></p>
+                  <div className="w-full">
+                    <h3 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 pb-2 border-b border-slate-100">Telecommunications</h3>
+                    <div className="space-y-3 text-sm text-slate-600">
+                      <div className="flex justify-between">
+                        <span className="font-medium">Emergency Line:</span>
+                        <a href="tel:+2347038787313" className="text-slate-900 font-semibold hover:text-slate-700">+234 703 878 7313</a>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium">General Administration:</span>
+                        <a href="tel:+2347038787313" className="text-slate-900 font-semibold hover:text-slate-700">+234 703 878 7313</a>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium">Corporate Accounts:</span>
+                        <a href="tel:+2347038787313" className="text-slate-900 font-semibold hover:text-slate-700">+234 703 878 7313</a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="rapidaid-card">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <MessageCircle className="w-6 h-6 text-primary" />
+              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <MessageCircle className="w-6 h-6 text-slate-700" />
                   </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">WhatsApp</h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Chat with our support team on WhatsApp
+                  <div className="w-full">
+                    <h3 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 pb-2 border-b border-slate-100">WhatsApp Support Channel</h3>
+                    <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+                      For non-critical inquiries, document submission, and general support, you can reach our administrative team via WhatsApp.
                     </p>
-                    <Button asChild variant="outline" size="sm" className="rapidaid-button">
+                    <Button asChild variant="outline" className="w-full border-slate-300 text-slate-700 hover:bg-slate-50">
                       <a href="https://wa.me/2347038787313" target="_blank" rel="noopener noreferrer">
                         <MessageCircle className="w-4 h-4 mr-2" />
-                        Start WhatsApp chat
+                        Initiate Secure Chat
                       </a>
                     </Button>
                   </div>
                 </div>
               </div>
 
-              <div className="rapidaid-card">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6 text-primary" />
+              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-6 h-6 text-slate-700" />
                   </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Email</h3>
-                    <div className="space-y-1 text-sm text-muted-foreground">
-                      <p>General: <a href="mailto:info@emergencycare360.ng" className="text-primary hover:underline">info@emergencycare360.ng</a></p>
-                      <p>Support: <a href="mailto:support@emergencycare360.ng" className="text-primary hover:underline">support@emergencycare360.ng</a></p>
-                      <p>Partnerships: <a href="mailto:partners@emergencycare360.ng" className="text-primary hover:underline">partners@emergencycare360.ng</a></p>
+                  <div className="w-full">
+                    <h3 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 pb-2 border-b border-slate-100">Electronic Mail Directory</h3>
+                    <div className="space-y-3 text-sm text-slate-600">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                        <span className="font-medium">General Inquiries:</span>
+                        <a href="mailto:info@emergencycare360.ng" className="text-slate-900 font-semibold hover:text-slate-700">info@emergencycare360.ng</a>
+                      </div>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                        <span className="font-medium">Technical Support:</span>
+                        <a href="mailto:support@emergencycare360.ng" className="text-slate-900 font-semibold hover:text-slate-700">support@emergencycare360.ng</a>
+                      </div>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                        <span className="font-medium">Institutional Partnerships:</span>
+                        <a href="mailto:partners@emergencycare360.ng" className="text-slate-900 font-semibold hover:text-slate-700">partners@emergencycare360.ng</a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="rapidaid-card">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-primary" />
+              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow">
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-6 h-6 text-slate-700" />
                   </div>
-                  <div>
-                    <h3 className="font-semibold mb-3">Office locations</h3>
-                    <div className="space-y-4 text-sm">
+                  <div className="w-full">
+                    <h3 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 pb-2 border-b border-slate-100">Corporate Facilities</h3>
+                    <div className="space-y-5 text-sm">
                       <div>
-                        <p className="font-medium mb-1">Ikeja headquarters</p>
-                        <p className="text-muted-foreground">
-                          47 Allen Avenue, Ikeja<br />
-                          Lagos State, Nigeria
+                        <p className="font-bold text-slate-900 mb-1">National Headquarters</p>
+                        <p className="text-slate-600 leading-relaxed">
+                          No 1 Rochas close<br />
+                          Okigwe, Imo State
                         </p>
                       </div>
                       <div>
-                        <p className="font-medium mb-1">Victoria Island office</p>
-                        <p className="text-muted-foreground">
+                        <p className="font-bold text-slate-900 mb-1">Victoria Island Dispatch Center</p>
+                        <p className="text-slate-600 leading-relaxed">
                           23 Adeola Odeku Street<br />
                           Victoria Island, Lagos
                         </p>
@@ -155,15 +177,15 @@ const ContactPage = () => {
                 </div>
               </div>
 
-              <div className="rapidaid-card bg-green-50 border-green-200">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-6 h-6 text-green-600" />
+              <div className="bg-slate-900 text-white rounded-xl shadow-lg border border-slate-800 p-6">
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-6 h-6 text-slate-300" />
                   </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">24/7 availability</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Our emergency response team is available around the clock, every day of the year. We never close.
+                  <div className="w-full">
+                    <h3 className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-2">Operational Readiness</h3>
+                    <p className="text-sm text-slate-300 leading-relaxed">
+                      Our dispatch centers, ambulance fleet, and medical personnel maintain 100% operational readiness 24/7/365. We do not observe public holidays or facility closures.
                     </p>
                   </div>
                 </div>
@@ -171,57 +193,60 @@ const ContactPage = () => {
             </div>
 
             <div>
-              <div className="rapidaid-card">
-                <h2 className="text-2xl font-bold mb-6">Send us a message</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-8 sticky top-24">
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">Formal Inquiry Submission</h2>
+                <p className="text-sm text-slate-500 mb-8 pb-4 border-b border-slate-100">
+                  Please use this secure channel for institutional inquiries, partnership requests, or administrative questions. Do not use this form for medical emergencies.
+                </p>
+                <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
-                    <Label htmlFor="name">Your name</Label>
+                    <Label htmlFor="name" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">Full Legal Name</Label>
                     <Input
                       id="name"
                       name="name"
                       type="text"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="Enter your full name"
+                      placeholder="e.g. Dr. John Doe or Jane Smith"
                       required
-                      className="mt-1 text-gray-900 placeholder:text-gray-500"
+                      className="mt-2 text-slate-900 placeholder:text-slate-400 bg-slate-50 border-slate-200 focus-visible:ring-slate-900"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="email">Email address</Label>
+                    <Label htmlFor="email" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">Professional Email Address</Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="your.email@example.com"
+                      placeholder="e.g. name@institution.com"
                       required
-                      className="mt-1 text-gray-900 placeholder:text-gray-500"
+                      className="mt-2 text-slate-900 placeholder:text-slate-400 bg-slate-50 border-slate-200 focus-visible:ring-slate-900"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="message">Message</Label>
+                    <Label htmlFor="message" className="text-slate-700 font-semibold text-xs uppercase tracking-wider">Message Content</Label>
                     <Textarea
                       id="message"
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
-                      placeholder="How can we help you?"
-                      rows={6}
+                      placeholder="Please clearly describe the nature of your inquiry..."
+                      rows={7}
                       required
-                      className="mt-1 text-gray-900 placeholder:text-gray-500"
+                      className="mt-2 text-slate-900 placeholder:text-slate-400 bg-slate-50 border-slate-200 focus-visible:ring-slate-900 resize-none"
                     />
                   </div>
 
                   <Button
                     type="submit"
-                    className="w-full rapidaid-button"
+                    className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-lg h-12 mt-2 shadow-none"
                     disabled={submitting}
                   >
-                    {submitting ? 'Sending...' : 'Send message'}
+                    {submitting ? 'Transmitting Request...' : 'Submit Inquiry'}
                   </Button>
                 </form>
               </div>

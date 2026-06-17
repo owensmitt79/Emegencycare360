@@ -70,9 +70,21 @@ Doctor.init({
     type: DataTypes.STRING,
     allowNull: true,
   },
+  staffNumber: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+  },
 }, {
   sequelize,
   modelName: 'Doctor',
+  hooks: {
+    beforeCreate: (doctor) => {
+      if (!doctor.staffNumber) {
+        doctor.staffNumber = `STF-${Math.floor(100000 + Math.random() * 900000)}`;
+      }
+    }
+  },
   indexes: [
     {
       fields: ['specialization'],

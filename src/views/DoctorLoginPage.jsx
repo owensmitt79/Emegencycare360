@@ -3,10 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { toast } from 'sonner';
 import { useDoctorAuth } from '@/contexts/DoctorAuthContext.jsx';
-import { Stethoscope, Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Stethoscope, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
 const DoctorLoginPage = () => {
-  // Pre-filled with demo credentials for easy testing
   const [email, setEmail] = useState('doctor@test.com');
   const [password, setPassword] = useState('doctor123');
   const [showPassword, setShowPassword] = useState(false);
@@ -50,82 +49,68 @@ const DoctorLoginPage = () => {
         <meta name="description" content="Secure login portal for registered Emergencycare360 doctors." />
       </Helmet>
 
-      {/* Full-page gradient background */}
-      <div className="min-h-[calc(100vh-4rem)] relative flex items-center justify-center py-12 px-4 overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f2d4a 100%)' }}>
-
-        {/* Decorative background circles */}
-        <div className="absolute top-[-80px] left-[-80px] w-96 h-96 rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, #3b82f6, transparent)' }} />
-        <div className="absolute bottom-[-60px] right-[-60px] w-80 h-80 rounded-full opacity-10"
-          style={{ background: 'radial-gradient(circle, #06b6d4, transparent)' }} />
-
-        <div className="relative z-10 w-full max-w-md">
-
-          {/* Logo / Brand header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-4"
-              style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', boxShadow: '0 0 40px rgba(59,130,246,0.4)' }}>
-              <Stethoscope className="w-10 h-10 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-white mb-1">Doctor Portal</h1>
-            <p className="text-slate-400 text-sm">Access your medical dashboard securely</p>
+      <div className="min-h-screen bg-[#fdfdfd] flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
+        
+        {/* Simple Header */}
+        <div className="w-full px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-white">
+          <div className="flex items-center gap-2">
+            <Stethoscope className="w-6 h-6 text-[#2563eb]" />
+            <span className="font-bold text-gray-900 text-lg tracking-tight">Emergencycare360</span>
           </div>
+          <Link to="/" className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
+            Back to Home
+          </Link>
+        </div>
 
-          {/* Glass card */}
-          <div className="rounded-2xl p-8 border border-white/10 shadow-2xl backdrop-blur-xl"
-            style={{ background: 'rgba(255,255,255,0.06)' }}>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col items-center pt-16 px-4">
+          
+          <div className="w-full max-w-sm">
+            <h1 className="text-[28px] font-bold text-gray-900 mb-2 tracking-tight">Doctor Portal</h1>
+            <p className="text-gray-500 text-sm mb-8">Sign in to access your medical dashboard</p>
 
-            {/* Demo credentials notice */}
-            <div className="mb-6 rounded-xl p-3 border border-blue-400/20 flex items-start gap-3"
-              style={{ background: 'rgba(59,130,246,0.1)' }}>
-              <ShieldCheck className="w-5 h-5 text-blue-400 mt-0.5 shrink-0" />
+            {/* Demo credentials */}
+            <div className="mb-8 rounded bg-[#eff6ff] border border-[#bfdbfe] p-4 flex items-start gap-3">
+              <ShieldCheck className="w-5 h-5 text-[#2563eb] shrink-0 mt-0.5" />
               <div>
-                <p className="text-blue-300 text-xs font-semibold uppercase tracking-wide">Demo Credentials Pre-filled</p>
-                <p className="text-slate-400 text-xs mt-0.5">
-                  Email: <span className="text-white font-mono">doctor@test.com</span> &nbsp;|&nbsp;
-                  Password: <span className="text-white font-mono">doctor123</span>
+                <p className="text-[#1d4ed8] text-xs font-bold uppercase tracking-widest mb-1">Demo Credentials</p>
+                <p className="text-[#1e40af] text-xs leading-relaxed">
+                  Email: <span className="font-mono bg-white px-1 py-0.5 rounded shadow-sm border border-blue-200">doctor@test.com</span><br/>
+                  Pass: <span className="font-mono bg-white px-1 py-0.5 rounded shadow-sm border border-blue-200 mt-1 inline-block">doctor123</span>
                 </p>
               </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email field */}
+              
+              {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5" htmlFor="doctor-email">
-                  Email Address
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5" htmlFor="doctor-email">
+                  Email address
                 </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    id="doctor-email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="doctor@example.com"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm outline-none transition-all focus:ring-2 focus:ring-blue-500/50"
-                    style={{
-                      background: 'rgba(255,255,255,0.07)',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                    }}
-                  />
-                </div>
+                <input
+                  id="doctor-email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="doctor@example.com"
+                  className="w-full px-4 py-3 rounded-md bg-white border border-gray-200 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] transition-all"
+                />
               </div>
 
-              {/* Password field */}
+              {/* Password */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-sm font-medium text-slate-300" htmlFor="doctor-password">
+                  <label className="block text-sm font-semibold text-gray-700" htmlFor="doctor-password">
                     Password
                   </label>
-                  <a href="#" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
+                  <a href="#" className="text-sm font-medium text-[#2563eb] hover:text-[#1d4ed8] transition-colors">
                     Forgot password?
                   </a>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     id="doctor-password"
                     type={showPassword ? 'text' : 'password'}
@@ -134,69 +119,49 @@ const DoctorLoginPage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-12 py-3 rounded-xl text-white placeholder-slate-500 text-sm outline-none transition-all focus:ring-2 focus:ring-blue-500/50"
-                    style={{
-                      background: 'rgba(255,255,255,0.07)',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                    }}
+                    className="w-full pl-4 pr-12 py-3 rounded-md bg-white border border-gray-200 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb] transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
 
-              {/* Submit button */}
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={isLoading}
                 id="doctor-login-btn"
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-white text-sm transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
-                style={{
-                  background: isLoading
-                    ? 'rgba(59,130,246,0.5)'
-                    : 'linear-gradient(135deg, #3b82f6, #06b6d4)',
-                  boxShadow: isLoading ? 'none' : '0 0 24px rgba(59,130,246,0.4)',
-                }}
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-md font-bold text-white text-sm bg-[#2563eb] hover:bg-[#1d4ed8] transition-colors disabled:opacity-70 disabled:cursor-not-allowed mt-4"
               >
                 {isLoading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Signing in…
-                  </>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <>
-                    Sign In to Dashboard
-                    <ArrowRight className="w-4 h-4" />
-                  </>
+                  'Sign in to Dashboard'
                 )}
               </button>
             </form>
 
-            {/* Footer links */}
-            <div className="mt-6 pt-6 border-t border-white/10 space-y-3 text-center">
-              <p className="text-sm text-slate-400">
+            <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col items-center justify-center gap-3 text-sm text-gray-500 font-medium">
+              <div>
                 Not registered yet?{' '}
-                <Link to="/doctors/register" className="font-semibold text-blue-400 hover:text-blue-300 transition-colors">
-                  Apply to join our network
+                <Link to="/doctors/register" className="text-[#2563eb] hover:text-[#1d4ed8] transition-colors">
+                  Apply to join
                 </Link>
-              </p>
-              <p className="text-xs text-slate-500">
-                Are you a patient?{' '}
-                <Link to="/login" className="text-slate-400 hover:text-slate-200 transition-colors">
-                  Patient Login →
+              </div>
+              <div className="text-gray-400">
+                Are you an admin?{' '}
+                <Link to="/admin/login" className="text-gray-500 hover:text-gray-700 transition-colors">
+                  Admin Portal
                 </Link>
-              </p>
+              </div>
             </div>
-          </div>
 
-          <p className="text-center text-xs text-slate-600 mt-6">
-            © 2026 Emergencycare360. All rights reserved.
-          </p>
+          </div>
         </div>
       </div>
     </>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Award, Users, Clock } from 'lucide-react';
+import { Shield, Award, Users, Clock, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const TrustSignals = () => {
@@ -23,6 +23,11 @@ const TrustSignals = () => {
       icon: Clock,
       title: '24/7 availability',
       description: 'Round-the-clock emergency response'
+    },
+    {
+      icon: CheckCircle,
+      title: 'NRS certified',
+      description: 'Nigeria Revenue Service certified'
     }
   ];
 

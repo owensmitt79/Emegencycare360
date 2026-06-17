@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, User, LogOut, Stethoscope, Shield } from 'lucide-react';
+import Logo from '@/components/Logo.jsx';
+import { Menu, X, User, LogOut, Stethoscope, Shield, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel
+} from '@/components/ui/dropdown-menu';
 import LanguageSwitcher from '@/components/LanguageSwitcher.jsx';
 import { useAuth } from '@/contexts/AuthContext.jsx';
 import { useTranslation } from '@/contexts/TranslationContext.jsx';
@@ -14,14 +23,22 @@ const Header = () => {
   const { isAuthenticated, role, logout, user } = useAuth();
   const { t } = useTranslation();
 
-  // Hide the main header on doctor/admin dashboard pages (they have their own nav)
-  const isDoctorDashboard = pathname.startsWith('/doctors/dashboard');
-  const isAdminDashboard = pathname.startsWith('/admin/dashboard');
-  if (isDoctorDashboard || isAdminDashboard) return null;
+  // Hide the main header on doctor/admin dashboard and clinical operations pages
+  const hideHeaderPaths = [
+    '/admin',
+    '/dispatcher',
+    '/doctors/availability',
+    '/doctors/dashboard',
+    '/hospitals'
+  ];
+  if (hideHeaderPaths.some(p => pathname.startsWith(p))) {
+    return null;
+  }
 
   const getNavLinks = () => {
     let links = [
       { path: '/', label: t('home') },
+      { path: '/about', label: t('about') || 'About Us' },
       { path: '/services', label: t('services') },
       { path: '/contact', label: t('contact') },
     ];
@@ -33,8 +50,6 @@ const Header = () => {
       links.push({ path: '/responder-management', label: t('services') });
       links.push({ path: '/hospital-directory', label: t('about') });
       links.push({ path: '/dispatcher', label: t('dashboard') });
-    } else {
-      links.push({ path: '/emergency-request', label: t('request_help') });
     }
 
     return links;
@@ -54,8 +69,9 @@ const Header = () => {
 
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-2">
+            <Logo className="w-10 h-10 sm:w-12 sm:h-12" />
             <span className="text-2xl font-extrabold text-primary tracking-tight">Emergencycare<span className="text-foreground">360</span></span>
           </Link>
 
@@ -78,22 +94,6 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-3">
             <LanguageSwitcher />
 
-            {/* Doctor Portal Link */}
-            <Link href="/doctors/login">
-              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
-                <Stethoscope className="w-4 h-4" />
-                {t('doctor_dashboard')}
-              </Button>
-            </Link>
-
-            {/* Admin Portal Link */}
-            <Link href="/admin/login">
-              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
-                <Shield className="w-4 h-4" />
-                {t('admin_dashboard')}
-              </Button>
-            </Link>
-            
             {isAuthenticated ? (
               <div className="flex items-center gap-2">
                 <Link href="/profile">
@@ -108,11 +108,32 @@ const Header = () => {
                 </Button>
               </div>
             ) : (
-              <Link href="/login">
-                <Button variant="default" size="sm" className="font-semibold">
-                  {t('login')} / {t('signup')}
-                </Button>
-              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="default" size="sm" className="font-semibold gap-2">
+                    Sign In <ChevronDown className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-white/95 backdrop-blur-md">
+                  <DropdownMenuLabel>Select Portal</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/login" className="cursor-pointer w-full flex items-center gap-2">
+                      <User className="w-4 h-4" /> Patient Login
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/doctors/login" className="cursor-pointer w-full flex items-center gap-2">
+                      <Stethoscope className="w-4 h-4" /> Doctor Portal
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin/login" className="cursor-pointer w-full flex items-center gap-2">
+                      <Shield className="w-4 h-4" /> Admin Portal
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
 

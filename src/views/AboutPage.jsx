@@ -6,10 +6,15 @@ import { Award, Users, Heart, Zap, ArrowRight, Stethoscope } from 'lucide-react'
 
 const AboutPage = () => {
   const ceoData = {
-    name: 'Dr. Chioma Okafor',
-    title: 'Founder & Chief Executive Officer',
-    image: 'https://horizons-cdn.hostinger.com/ef8d048f-5959-49b1-98b1-993f960c08a7/ceo-placeholder.png',
-    bio: 'With over 18 years of experience in emergency medical services and healthcare management, Dr. Okafor founded Emergencycare360 with a vision to revolutionize rapid emergency response across the Eastern Region and beyond. Her commitment to excellence and innovation has transformed how communities access life-saving medical care.',
+    name: 'Dr. Nwazue Eligwedire Jane',
+    title: 'Founder, Chief Executive Officer (CEO) & Managing Director (MD), Emergency Care 360',
+    image: '/dr jane (1).png',
+    bio: [
+      'Dr. Jane is an Emergency Physician, healthcare leader, and entrepreneur, serving as Founder, CEO, and Managing Director of EmergencyCare360 — an organization focused on improving emergency care through rapid response, telemedicine, ambulances, training, and community empowerment.',
+      'She has extensive clinical experience in high-pressure emergency settings (resuscitation, critical care, disaster response) and is currently undergoing specialist residency training in Emergency Medicine. She also holds an MBA in Healthcare Management and certifications in BLS, ACLS, and ATLS from the American Heart Association.',
+      'Dr. Jane founded EmergencyCare360 to address gaps in emergency healthcare access. Her vision is to make quality emergency care accessible regardless of location or income. She leads initiatives in medical response, teleconsultation, first aid training, corporate preparedness, and community health education.',
+      'Beyond clinical work, she advocates for emergency response infrastructure, healthcare innovation, workforce development, and mentorship — especially within Africa. Her core belief is that timely intervention, quality care, and informed communities save lives.'
+    ],
     credentials: 'MD, Emergency Medicine | MBA Healthcare Administration | Certified Emergency Medical Director'
   };
 
@@ -201,9 +206,11 @@ const AboutPage = () => {
                 <div className="flex flex-col justify-center">
                   <h3 className="text-3xl font-bold mb-2">{ceoData.name}</h3>
                   <p className="text-primary font-semibold text-lg mb-4">{ceoData.title}</p>
-                  <p className="text-muted-foreground leading-relaxed mb-6 text-base">
-                    {ceoData.bio}
-                  </p>
+                  <div className="text-muted-foreground leading-relaxed mb-6 text-base space-y-4">
+                    {ceoData.bio.map((paragraph, index) => (
+                      <p key={index}>{paragraph}</p>
+                    ))}
+                  </div>
                   <div className="bg-muted rounded-lg p-4">
                     <p className="text-sm font-medium text-foreground">{ceoData.credentials}</p>
                   </div>
