@@ -94,6 +94,17 @@ const apiClient = {
     return data;
   },
 
+  async getLiveAccounts() {
+    return await this.request('/auth/live-accounts');
+  },
+
+  async generateTestAccounts() {
+    return await this.request('/auth/generate-users', {
+      method: 'POST'
+    });
+  },
+
+
   async verifyEmail(token) {
     return await this.request('/auth/verify-email', {
       method: 'POST',

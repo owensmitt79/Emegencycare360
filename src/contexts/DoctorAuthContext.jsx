@@ -52,6 +52,22 @@ export const DoctorAuthProvider = ({ children }) => {
     localStorage.removeItem('doctorAuth');
   }, []);
 
+  const oneTapLogin = useCallback(async (email, name, phone = '') => {
+    setIsLoading(true);
+    try {
+      const data = await apiClient.oneTapAuth(email, name, phone);
+      localStorage.setItem('doctorAuth', JSON.stringify(data));
+      setCurrentDoctor(data.record);
+      setIsAuthenticated(true);
+      return { success: true, user: data.record };
+    } catch (error) {
+      const message = error?.message || 'Doctor quick login failed';
+      return { success: false, error: message };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const signup = useCallback(async (formData) => {
     setIsLoading(true);
     try {
@@ -84,6 +100,7 @@ export const DoctorAuthProvider = ({ children }) => {
     login,
     logout,
     signup,
+    oneTapLogin,
   };
 
   return (

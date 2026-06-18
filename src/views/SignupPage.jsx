@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { toast } from 'sonner';
@@ -6,7 +6,8 @@ import { useAuth } from '@/contexts/AuthContext.jsx';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { UserPlus, Chrome, Sparkles, Loader2, ArrowRight } from 'lucide-react';
+import { UserPlus, Chrome, Sparkles, Loader2, ArrowRight, X } from 'lucide-react';
+import apiClient from '@/lib/apiClient.js';
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -22,30 +23,39 @@ const SignupPage = () => {
 
   const [showAccountDrawer, setShowAccountDrawer] = useState(false);
   const [isProcessingQuickAuth, setIsProcessingQuickAuth] = useState(false);
+  const [liveAccounts, setLiveAccounts] = useState([]);
 
-  const mockSavedAccounts = [
-    {
-      fullName: 'John Doe',
-      email: 'john.doe@gmail.com',
-      avatarColor: 'bg-purple-600',
-      initial: 'J',
-      phone: '+2348011223344'
-    },
-    {
-      fullName: 'John D. Emergency',
-      email: 'doe.john.emergency@outlook.com',
-      avatarColor: 'bg-emerald-600',
-      initial: 'E',
-      phone: '+2348055667788'
-    },
-    {
-      fullName: 'J. Doe Professional',
-      email: 'j.doe.medical@hospital.org',
-      avatarColor: 'bg-sky-600',
-      initial: 'P',
-      phone: '+2349099887766'
-    }
-  ];
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const response = await apiClient.getLiveAccounts();
+        if (response.success && response.accounts) {
+          const patientAccounts = response.accounts
+            .filter(acc => acc.role === 'patient' || acc.role === 'user')
+            .map(acc => {
+              const nameParts = acc.full_name.split(' ');
+              const initial = nameParts[0] ? nameParts[0][0].toUpperCase() : 'U';
+              const colors = ['bg-purple-600', 'bg-emerald-600', 'bg-sky-600', 'bg-amber-600', 'bg-rose-600'];
+              const charCodeSum = acc.email.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+              const avatarColor = colors[charCodeSum % colors.length];
+
+              return {
+                fullName: acc.full_name,
+                email: acc.email,
+                avatarColor,
+                initial,
+                phone: acc.phone || ''
+              };
+            });
+          setLiveAccounts(patientAccounts);
+        }
+      } catch (err) {
+        console.error('Failed to load live accounts:', err);
+      }
+    };
+    fetchAccounts();
+  }, []);
+
 
   const handleQuickRegister = async (account) => {
     setShowAccountDrawer(false);
@@ -117,6 +127,42 @@ const SignupPage = () => {
       }
     } else {
       toast.error(result.error);
+    }
+  };
+
+  const handleGenerateTestAccounts = async () => {
+    const toastId = toast.loading('Generating fresh test accounts in database...');
+    try {
+      const response = await apiClient.generateTestAccounts();
+      if (response.success) {
+        toast.success(response.message, { id: toastId });
+        const fetchResponse = await apiClient.getLiveAccounts();
+        if (fetchResponse.success && fetchResponse.accounts) {
+          const patientAccounts = fetchResponse.accounts
+            .filter(acc => acc.role === 'patient' || acc.role === 'user')
+            .map(acc => {
+              const nameParts = acc.full_name.split(' ');
+              const initial = nameParts[0] ? nameParts[0][0].toUpperCase() : 'U';
+              const colors = ['bg-purple-600', 'bg-emerald-600', 'bg-sky-600', 'bg-amber-600', 'bg-rose-600'];
+              const charCodeSum = acc.email.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+              const avatarColor = colors[charCodeSum % colors.length];
+
+              return {
+                fullName: acc.full_name,
+                email: acc.email,
+                avatarColor,
+                initial,
+                phone: acc.phone || ''
+              };
+            });
+          setLiveAccounts(patientAccounts);
+        }
+      } else {
+        toast.error(response.error || 'Failed to generate accounts.', { id: toastId });
+      }
+    } catch (err) {
+      toast.error('Encountered an error generating test accounts.', { id: toastId });
+      console.error(err);
     }
   };
 
@@ -269,18 +315,24 @@ const SignupPage = () => {
         </div>
       </div>
 
-      {/* Google-Style Saved Email Drawer/Sheet for Phone Account Choosing */}
+      {/* Google-Style Saved Email Centered Modal */}
       {showAccountDrawer && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-opacity duration-300 animate-fade-in">
           {/* Backdrop click to close */}
           <div className="absolute inset-0" onClick={() => setShowAccountDrawer(false)} />
           
-          <div className="relative w-full max-w-md bg-card rounded-t-2xl border-t border-border shadow-2xl p-6 pb-8 transform transition-transform duration-300 animate-slide-up flex flex-col z-10">
-            {/* Native indicator bar */}
-            <div className="w-12 h-1.5 bg-muted rounded-full mx-auto mb-5 cursor-pointer" onClick={() => setShowAccountDrawer(false)} />
+          <div className="relative w-full max-w-md bg-card rounded-2xl border border-border shadow-2xl p-6 pb-8 transform transition-all duration-300 animate-in fade-in zoom-in-95 flex flex-col z-10">
+            {/* Close Button */}
+            <button 
+              onClick={() => setShowAccountDrawer(false)}
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors p-1.5 rounded-lg hover:bg-muted/80 active:scale-95 duration-100"
+              aria-label="Close dialog"
+            >
+              <X className="w-5 h-5" />
+            </button>
             
             {/* Header */}
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6 pr-8">
               <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                 <Chrome className="w-5 h-5 text-primary" />
               </div>
@@ -294,7 +346,7 @@ const SignupPage = () => {
 
             {/* List of saved accounts */}
             <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-              {mockSavedAccounts.map((account, index) => (
+              {liveAccounts.map((account, index) => (
                 <button
                   key={index}
                   type="button"
@@ -317,6 +369,9 @@ const SignupPage = () => {
                   <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 duration-200" />
                 </button>
               ))}
+              {liveAccounts.length === 0 && (
+                <p className="text-center text-sm text-muted-foreground py-4">No saved accounts found in database.</p>
+              )}
             </div>
 
             <div className="mt-4 border-t border-border pt-4">
@@ -328,12 +383,26 @@ const SignupPage = () => {
                   toast.info("Standard registration form is ready for manual entry below.");
                 }}
               >
-                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-bold">
                   +
                 </div>
                 <div>
-                  <p className="font-medium text-sm text-foreground">Use another account</p>
+                  <p className="font-semibold text-sm text-foreground">Use another account</p>
                   <p className="text-xs text-muted-foreground">Fill registration fields manually</p>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-muted/60 text-left transition-colors group mt-2"
+                onClick={handleGenerateTestAccounts}
+              >
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold group-hover:scale-105 transition-transform">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">Generate Fresh Test Accounts</p>
+                  <p className="text-xs text-muted-foreground">Auto-create new Patient, Doctor & Dispatcher</p>
                 </div>
               </button>
             </div>

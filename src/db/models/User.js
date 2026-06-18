@@ -40,6 +40,19 @@ User.init({
   phone: {
     type: DataTypes.STRING,
     allowNull: true,
+    set(value) {
+      if (value) {
+        let val = value.replace(/\s+/g, '').replace(/-+/g, '');
+        if (/^0\d{10}$/.test(val)) {
+          val = '+234' + val.substring(1);
+        } else if (val && !val.startsWith('+')) {
+          val = '+' + val;
+        }
+        this.setDataValue('phone', val);
+      } else {
+        this.setDataValue('phone', null);
+      }
+    },
     validate: {
       isE164(value) {
         if (value && !/^\+[1-9]\d{1,14}$/.test(value)) {

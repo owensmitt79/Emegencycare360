@@ -30,7 +30,7 @@ for (const [filename, sourcePath] of Object.entries(sources)) {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  serverExternalPackages: ['sequelize', 'mysql2'],
+  serverExternalPackages: ['sequelize', 'pg'],
   webpack: (config) => {
     config.resolve.alias['react-router-dom'] = path.resolve(__dirname, 'src/lib/router-compat.jsx');
     config.resolve.alias['react'] = path.resolve(__dirname, 'node_modules/react');

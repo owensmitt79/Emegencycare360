@@ -61,6 +61,10 @@ export async function POST(req) {
     }, { status: 201 });
   } catch (error) {
     console.error('Register error:', error);
-    return NextResponse.json({ error: 'Server error during registration' }, { status: 500 });
+    if (error.name === 'SequelizeValidationError') {
+      const messages = error.errors.map(err => err.message).join(', ');
+      return NextResponse.json({ error: messages }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'Server error during registration: ' + error.message }, { status: 500 });
   }
 }
