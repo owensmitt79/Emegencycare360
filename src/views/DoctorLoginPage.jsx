@@ -6,8 +6,8 @@ import { useDoctorAuth } from '@/contexts/DoctorAuthContext.jsx';
 import { Stethoscope, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 
 const DoctorLoginPage = () => {
-  const [email, setEmail] = useState('doctor@test.com');
-  const [password, setPassword] = useState('doctor123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useDoctorAuth();
@@ -69,17 +69,7 @@ const DoctorLoginPage = () => {
             <h1 className="text-[28px] font-bold text-gray-900 mb-2 tracking-tight">Doctor Portal</h1>
             <p className="text-gray-500 text-sm mb-8">Sign in to access your medical dashboard</p>
 
-            {/* Demo credentials */}
-            <div className="mb-8 rounded bg-[#eff6ff] border border-[#bfdbfe] p-4 flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-[#2563eb] shrink-0 mt-0.5" />
-              <div>
-                <p className="text-[#1d4ed8] text-xs font-bold uppercase tracking-widest mb-1">Demo Credentials</p>
-                <p className="text-[#1e40af] text-xs leading-relaxed">
-                  Email: <span className="font-mono bg-white px-1 py-0.5 rounded shadow-sm border border-blue-200">doctor@test.com</span><br/>
-                  Pass: <span className="font-mono bg-white px-1 py-0.5 rounded shadow-sm border border-blue-200 mt-1 inline-block">doctor123</span>
-                </p>
-              </div>
-            </div>
+
 
             <form onSubmit={handleSubmit} className="space-y-5">
               
